@@ -98,7 +98,7 @@
 </script>
 
 <main id="welcome-screen" data-pad-top="28" data-pad-bottom="30">
-  <h3>Hello {passcode}!</h3>
+  <h3>Hello {passcode}</h3>
   <div class="vertical">
     <div class="vertClass">Vertical 1</div>
     <div class="vertClass">Vertical 2</div>
