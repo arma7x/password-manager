@@ -49,12 +49,13 @@ async function rsaEncrypt(publicOrPrivateKey, message) {
 }
 
 async function rsaDecrypt(privateKey, encryptedMessage) {
-  return await window.crypto.subtle.decrypt({ name: rsaConfig.name }, privateKey, base64Decode(encryptedMessage));
+  let decrypted = await window.crypto.subtle.decrypt({ name: rsaConfig.name }, privateKey, base64Decode(encryptedMessage));
+  return new TextDecoder().decode(new Uint8Array(decrypted));
 }
 
 // at least 1 number, 1 uppercase & 1 lowercase
-export function checkPasswordStrength(str) {
-  if (str.length < 3)
+export function checkPasscodeRequirement(str, min = 3) {
+  if (str.length < min)
     throw("Minimum length is 3");
   if (/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/.test(str) === false)
     throw("At least 1 number and 1 uppercase and 1 lowercase");
@@ -157,4 +158,28 @@ export async function pbkdf2(message, salt, iterations, keyLen, algorithm) {
   }, key, keyLen * 8)
 
   return new Uint8Array(buffer)
+}
+
+export async function test(passcode, message) {
+  checkPasscodeRequirement(passcode);
+  const hash = hashPassword(passcode);
+  if (comparePassword(passcode, hash)) {
+    const key = await generateRSAKey();
+    let publicKey = await convertRSAKeyToJWK(key.publicKey);
+    let privateKey = await convertRSAKeyToJWK(key.privateKey);
+    const encryptPrivateKey = await aesEncrypt(JSON.stringify(privateKey), passcode);
+    const decryptPrivateKey = JSON.parse(await aesDecrypt(encryptPrivateKey, passcode));
+    if (JSON.stringify(decryptPrivateKey) !== JSON.stringify(privateKey)) {
+      throw(`FAIL: aesEncrypt/aesDecrypt private key`);
+    }
+    let _publicKey = await convertJWKToRSAKey(publicKey);
+    let _privateKey = await convertJWKToRSAKey(decryptPrivateKey);
+    const messageEncrypted = await rsaEncrypt(_publicKey, message);
+    const messageDecrypted = await rsaDecrypt(_privateKey, messageEncrypted);
+    if (messageDecrypted !== message) {
+      throw(`FAIL: rsaEncrypt/rsaDecrypt, expected: ${message}, actual result: ${messageDecrypted}`);
+    }
+  } else {
+    throw(`FAIL: Password not match: ${passcode}`);
+  }
 }
