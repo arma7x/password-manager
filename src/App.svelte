@@ -1,10 +1,10 @@
 <script lang="ts">
   import { Router, Route, Link } from 'svelte-navigator';
-  import { AppBar, SoftwareKey } from './components';
-  import { Welcome, Demo, Room } from './routes';
+  import { AppBar, SoftwareKey } from './components/index.ts';
+  import { Welcome, Demo, Room } from './routes/index.ts';
   import { onMount, onDestroy } from 'svelte';
-  import { Localization } from './utils/localization';
-  import * as crypto from './utils/WebCryptoVault';
+  import { Localization } from './utils/localization.ts';
+  import * as crypto from './utils/WebCryptoVault.ts';
 
   export let localization = new Localization('en-US', 'langs');
   export let appBar;
@@ -24,6 +24,7 @@
           window['_activityRequest_'].close();
       }
     });
+    console.log(crypto);
     // const hash = crypto.hashPassword("1234");
     // console.log(crypto.comparePassword("1234", hash));
   });

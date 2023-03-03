@@ -24,6 +24,34 @@ export {
   dbPasswordVault
 }
 
+const rsaConfig = {
+  name: "RSA-OAEP",
+  modulusLength: 2048,
+  publicExponent: new Uint8Array([1, 0, 1]),
+  hash: "SHA-256"
+};
+
+async function generateRSAKey() {
+  return await window.crypto.subtle.generateKey(rsaConfig, true, ["encrypt", "decrypt"]);
+}
+
+async function convertRSAKeyToJWK(key) {
+  return await window.crypto.subtle.exportKey("jwk", key);
+}
+
+async function convertJWKToRSAKey(jwt) {
+  return await window.crypto.subtle.importKey("jwk", jwt, rsaConfig, true, [...jwt.key_ops]);
+}
+
+async function rsaEncrypt(publicOrPrivateKey, message) {
+  let encrypted = await window.crypto.subtle.encrypt({ name: rsaConfig.name, }, publicOrPrivateKey, new TextEncoder().encode(message));
+  return base64Encode(new Uint8Array(encrypted));
+}
+
+async function rsaDecrypt(privateKey, encryptedMessage) {
+  return await window.crypto.subtle.decrypt({ name: rsaConfig.name }, privateKey, base64Decode(encryptedMessage));
+}
+
 // at least 1 number, 1 uppercase & 1 lowercase
 export function checkPasswordStrength(str) {
   if (str.length < 3)

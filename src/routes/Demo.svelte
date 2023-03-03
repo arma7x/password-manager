@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Route, navigate as goto } from "svelte-navigator";
-  import { createKaiNavigator } from '../utils/navigation';
-  import { Dialog, OptionMenu, SingleSelector, MultiSelector, ListView, Separator, Radio, Checkbox, LoadingBar, LinearProgress, RangeSlider, Button, TextInputField, TextAreaField, TextInputDialog, TextAreaDialog, Radio, Checkbox, DatePicker, TimePicker, Toast, Toaster, SoftwareKey } from '../components';
+  import { createKaiNavigator } from '../utils/navigation.ts';
+  import { Dialog, OptionMenu, SingleSelector, MultiSelector, ListView, Separator, Radio, Checkbox, LoadingBar, LinearProgress, RangeSlider, Button, TextInputField, TextAreaField, TextInputDialog, TextAreaDialog, Radio, Checkbox, DatePicker, TimePicker, Toast, Toaster, SoftwareKey } from '../components/index.ts';
   import { onMount, onDestroy } from 'svelte';
 
   const navClass: string = 'homeNav';

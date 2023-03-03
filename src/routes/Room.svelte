@@ -1,6 +1,6 @@
 <script lang="ts">
   import { navigate as goto } from "svelte-navigator";
-  import { createKaiNavigator } from '../utils/navigation';
+  import { createKaiNavigator } from '../utils/navigation.ts';
   import { onMount, onDestroy } from 'svelte';
 
   export let location: any;

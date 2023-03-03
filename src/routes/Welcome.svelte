@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Route, navigate as goto } from "svelte-navigator";
-  import { createKaiNavigator } from '../utils/navigation';
+  import { createKaiNavigator } from '../utils/navigation.ts';
   import { onMount, onDestroy } from 'svelte';
   import Passcode from '../Passcode.svelte';
 
