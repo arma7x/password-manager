@@ -2,6 +2,7 @@
   import { Route, navigate as goto } from "svelte-navigator";
   import { createKaiNavigator } from '../utils/navigation';
   import { onMount, onDestroy } from 'svelte';
+  import Passcode from '../Passcode.svelte';
 
   export let location: any;
   export let navigate: any;
@@ -9,9 +10,12 @@
 
   let name: string = 'Welcome';
 
+  let refPasscode: Passcode;
+  let passcode: string = '0123abcABC';
+
   let navOptions = {
     verticalNavClass: 'vertClass',
-    horizontalNavClass: 'horzClass',
+    // horizontalNavClass: 'horzClass',
     softkeyLeftListener: function(evt) {
       console.log('softkeyLeftListener', name);
     },
@@ -45,8 +49,9 @@
 </script>
 
 <main id="welcome-screen" data-pad-top="28" data-pad-bottom="30">
-  <h1>Hello {name}!</h1>
+  <h3>Hello {passcode}!</h3>
   <div class="vertical">
+    <Passcode bind:this={refPasscode} className={"vertClass"} bind:passcode="{passcode}" />
     <div class="vertClass">Vertical 1</div>
     <div class="vertClass">Vertical 2</div>
   </div>
