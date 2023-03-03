@@ -63,6 +63,7 @@
     left: 0;
   }
   .passcode-container > .row {
+    width: 200px;
     position: absolute;
     top: 0;
     z-index: 9;
@@ -78,6 +79,7 @@
   .passcode-container > .row > .char {
     width: 18px;
     height: 30px;
+    text-align: center;
     align-items: center;
     justify-content: center;
     margin-right: 5px;
