@@ -1,6 +1,28 @@
 // https://gist.github.com/junderw/1d41158403978ba0363e5868d4f434d9
 
+import * as localForage from "localforage";
+localForage.setDriver(localForage.INDEXEDDB);
+
 declare var dcodeIO:any;
+
+const dbName = 'DATABASE';
+
+const dbAppConfig = localForage.createInstance({
+  name        : dbName,
+  storeName   : 'dbAppConfig',
+  description : 'store app config'
+});
+
+const dbPasswordVault = localForage.createInstance({
+  name        : dbName,
+  storeName   : 'passwordVault',
+  description : 'store password'
+});
+
+export {
+  dbAppConfig,
+  dbPasswordVault
+}
 
 export function hashPassword(str) {
   var salt = dcodeIO.bcrypt.genSaltSync(10);
