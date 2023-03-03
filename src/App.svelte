@@ -19,8 +19,8 @@
       window['_activityRequest_'] = activityRequest;
       window['_option_'] = window['_activityRequest_'].source;
       if (window['_option_'].name === "voice-input") {
-          window['_activityRequest_'].postResult("Activity received by consumer.");
-          window['_activityRequest_'].close();
+        window['_activityRequest_'].postResult("Activity received by consumer.");
+        window['_activityRequest_'].close();
       }
     });
   });
