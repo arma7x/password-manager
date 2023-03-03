@@ -28,7 +28,7 @@
       goto('demo');
     },
     backspaceListener: function(evt) {
-      console.log('backspaceListener', name);
+      window.close();
     }
   };
 
