@@ -17,6 +17,7 @@
     verticalNavClass: 'vertClass',
     // horizontalNavClass: 'horzClass',
     softkeyLeftListener: function(evt) {
+      refPasscode.toggleVisibility();
       console.log('softkeyLeftListener', name);
     },
     softkeyRightListener: function(evt) {
