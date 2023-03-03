@@ -19,6 +19,21 @@ const dbPasswordVault = localForage.createInstance({
   description : 'store password'
 });
 
+// getPasswordHash(): string
+// setPasswordHash(hash: string): string
+
+// getPublicKey(): Object
+// setPublicKey(key: Object): Object
+
+// getPrivateKey(): string
+// setPrivateKey(str: string): string
+
+// getAllPasswordVault(): Object
+// storeIntoPasswordVault(id: number|null, alias: string, name: string, secret: string, publicKey: Key): number
+// getFromPasswordVault(id: number): number
+// removeFromPasswordVault(id: number): number
+// migratePasswordVault(oldPrivateKey: Key, newPublicKey: key)
+
 export {
   dbAppConfig,
   dbPasswordVault
