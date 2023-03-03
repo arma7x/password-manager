@@ -1,5 +1,16 @@
 // https://gist.github.com/junderw/1d41158403978ba0363e5868d4f434d9
 
+declare var dcodeIO:any;
+
+export function hashPassword(str) {
+  var salt = dcodeIO.bcrypt.genSaltSync(10);
+  return dcodeIO.bcrypt.hashSync(str.toString(), salt);
+}
+
+export function comparePassword(str, hash) {
+  return dcodeIO.bcrypt.compareSync(str, hash);
+}
+
 export async function aesEncrypt(data, password, difficulty = 10) {
   const hashKey = await grindKey(password, difficulty)
   const iv = await getIv(password, data)

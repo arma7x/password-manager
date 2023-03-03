@@ -4,7 +4,7 @@
   import { Welcome, Demo, Room } from './routes';
   import { onMount, onDestroy } from 'svelte';
   import { Localization } from './utils/localization';
-  import * as crypto from './utils/aesWebCrypto';
+  import * as crypto from './utils/WebCrypto';
 
   export let localization = new Localization('en-US', 'langs');
   export let appBar;
@@ -24,7 +24,8 @@
           window['_activityRequest_'].close();
       }
     });
-    console.log(crypto);
+    // const hash = crypto.hashPassword("1234");
+    // console.log(crypto.comparePassword("1234", hash));
   });
 
 </script>
