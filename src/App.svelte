@@ -4,7 +4,6 @@
   import { Welcome, Demo, Room } from './routes/index.ts';
   import { onMount, onDestroy } from 'svelte';
   import { Localization } from './utils/localization.ts';
-  import * as crypto from './utils/WebCryptoVault.ts';
 
   export let localization = new Localization('en-US', 'langs');
   export let appBar;
@@ -14,7 +13,7 @@
     return {appBar, softwareKey, localization};
   }
 
-  onMount(async () => {
+  onMount(() => {
     console.log('onMount', 'App');
     navigator.mozSetMessageHandler('activity', (activityRequest) => {
       window['_activityRequest_'] = activityRequest;
@@ -24,13 +23,6 @@
           window['_activityRequest_'].close();
       }
     });
-    try {
-      console.time("WebCryptoVault");
-      await crypto.test("aB1?", "Hey, i'm secured");
-      console.timeEnd("WebCryptoVault");
-    } catch (err) {
-      console.error(err);
-    }
   });
 
 </script>
