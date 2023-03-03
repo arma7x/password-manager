@@ -4,6 +4,7 @@
   import { Welcome, Demo, Room } from './routes';
   import { onMount, onDestroy } from 'svelte';
   import { Localization } from './utils/localization';
+  import * as crypto from './utils/aesWebCrypto';
 
   export let localization = new Localization('en-US', 'langs');
   export let appBar;
@@ -23,6 +24,7 @@
           window['_activityRequest_'].close();
       }
     });
+    console.log(crypto);
   });
 
 </script>
