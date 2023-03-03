@@ -24,6 +24,15 @@ export {
   dbPasswordVault
 }
 
+// at least 1 number, 1 uppercase & 1 lowercase
+export function checkPasswordStrength(str) {
+  if (str.length < 3)
+    throw("Minimum length is 3");
+  if (/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/.test(str) === false)
+    throw("At least 1 number and 1 uppercase and 1 lowercase");
+  return str
+}
+
 export function hashPassword(str) {
   var salt = dcodeIO.bcrypt.genSaltSync(10);
   return dcodeIO.bcrypt.hashSync(str.toString(), salt);
