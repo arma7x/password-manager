@@ -4,7 +4,7 @@
   import { Welcome, Demo, Room } from './routes';
   import { onMount, onDestroy } from 'svelte';
   import { Localization } from './utils/localization';
-  import * as crypto from './utils/WebCrypto';
+  import * as crypto from './utils/WebCryptoVault';
 
   export let localization = new Localization('en-US', 'langs');
   export let appBar;
