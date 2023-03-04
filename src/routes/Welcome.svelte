@@ -199,8 +199,9 @@
         focusIndex: 0,
         options: [
           { title: 'Add new vault', subtitle: 'Insert new sensitive data into vault' },
-          { title: 'FAQ', subtitle: 'Frequently Asked Questions' },
-          { title: 'Disclaimer!', subtitle: 'Notice of app usage' },
+          { title: 'Change passcode', subtitle: 'Change app passcode' }, // TODO
+          { title: 'FAQ', subtitle: 'Frequently Asked Questions' }, // TODO
+          { title: 'Disclaimer!', subtitle: 'Notice of app usage' },  // TODO
           { title: 'Hard Reset!', subtitle: 'Clear passcode, encryption keys and all vaults' },
           { title: 'Exit', subtitle: 'Close app' },
         ],
@@ -211,10 +212,10 @@
           lskMenu.$destroy();
           if (scope.index == 0) {
             openVaultModal();
-          } else if (scope.index == 3) {
+          } else if (scope.index == 4) {
             await WebCryptoVault.dbAppConfig.clear();
             await WebCryptoVault.dbPasswordVault.clear();
-          } else if (scope.index ==4) {
+          } else if (scope.index == 5) {
             window.close();
           }
         },
@@ -284,6 +285,7 @@
       return;
     window['_activityRequest_'].postResult(data.name);
     window['_activityRequest_'].close();
+    // TODO Options Menu Alias, Name and Sensitive Data
   }
 
   function openVaultModal(update: Object | null) {
