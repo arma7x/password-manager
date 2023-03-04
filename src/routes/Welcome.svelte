@@ -176,7 +176,7 @@
         title: 'Menu',
         focusIndex: 0,
         options: [
-          { title: 'Add', subtitle: 'Insert sensitive data into vault' },
+          { title: 'Add new vault', subtitle: 'Insert new sensitive data into vault' },
           { title: 'HARD RESET!', subtitle: 'Clear passcode, encryption key and all vault' },
         ],
         softKeyCenterText: 'select',
