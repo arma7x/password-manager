@@ -21,7 +21,10 @@
   let navOptions = {
     verticalNavClass: 'navClassModal',
     softkeyLeftListener: function(evt) {
-      refPasscode.toggleVisibility();
+      if (refPasscode.toggleVisibility())
+        softwareKey.setLeftText("Hide");
+      else
+        softwareKey.setLeftText("Show");
     },
     softkeyRightListener: function(evt) {
       window.close();
@@ -51,7 +54,7 @@
       target: document.body,
       props: {
         isInvert: false,
-        leftText: 'Toggle',
+        leftText: 'Show',
         centerText: 'Enter',
         rightText: 'Exit'
       }
