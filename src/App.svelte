@@ -13,6 +13,8 @@
     return {appBar, softwareKey, localization};
   }
 
+  let timeoutTimer: any;
+
   onMount(() => {
     console.log('onMount', 'App');
     navigator.mozSetMessageHandler('activity', (activityRequest) => {
@@ -21,6 +23,18 @@
       if (window['_option_'].name === "voice-input") {
         window['_activityRequest_'].postResult("Activity received by consumer.");
         window['_activityRequest_'].close();
+      }
+    });
+    document.addEventListener('visibilitychange', (evt) => {
+      if (document.visibilityState === 'visible') {
+        if (timeoutTimer != null) {
+          clearTimeout(timeoutTimer);
+          timeoutTimer = null;
+        }
+      } else {
+        timeoutTimer = setTimeout(() => {
+          window.close();
+        }, 60000);
       }
     });
   });
