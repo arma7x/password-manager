@@ -15,6 +15,14 @@
     return visible;
   }
 
+  export function focus() {
+    focusInput();
+  }
+
+  export function blur() {
+    passcodeInputRef.blur();
+  }
+
   function onKeyDownUp(evt) {
     if (['ArrowLeft', 'ArrowRight'].indexOf(evt.key) > -1) {
       evt.preventDefault();
