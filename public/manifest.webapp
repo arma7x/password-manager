@@ -23,7 +23,7 @@
     "url": "https://github.com/arma7x/kaios-svelte-starter"
   },
   "origin": "app://password-manager.arma7x.com",
-  "type": "privileged",
+  "type": "web",
   "permissions": {},
   "locales": {
     "en-US": {
