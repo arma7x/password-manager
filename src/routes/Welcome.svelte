@@ -21,10 +21,16 @@
 
   $: if (Object.keys(collections).length > 0) {
     const { softwareKey } = getAppProp();
-    softwareKey.setText({ left: 'Menu', center: '', right: 'Options' });
+    if (window['_activityRequest_'] != null)
+      softwareKey.setText({ left: '', center: 'SELECT', right: '' });
+    else
+      softwareKey.setText({ left: 'Menu', center: '', right: 'Options' });
   } else {
     const { softwareKey } = getAppProp();
-    softwareKey.setText({ left: 'Menu', center: '', right: '' });
+    if (window['_activityRequest_'] != null)
+      softwareKey.setText({ left: '', center: '', right: '' });
+    else
+      softwareKey.setText({ left: 'Menu', center: '', right: '' });
   }
 
   let lskMenu: OptionMenu;
@@ -41,10 +47,10 @@
       openRSKMenu();
     },
     enterListener: function(evt) {
-      //const navClasses = document.getElementsByClassName(navClass);
-      //if (navClasses[this.verticalNavIndex] != null) {
-        //navClasses[this.verticalNavIndex].click();
-      //}
+      const navClasses = document.getElementsByClassName(navClass);
+      if (navClasses[this.verticalNavIndex] != null) {
+        navClasses[this.verticalNavIndex].click();
+      }
     },
     backspaceListener: function(evt) {
       window.close();
@@ -55,6 +61,14 @@
 
   onMount(async () => {
     console.log('onMount', name);
+    navigator.mozSetMessageHandler('activity', (activityRequest) => {
+      window['_activityRequest_'] = activityRequest;
+      window['_option_'] = window['_activityRequest_'].source;
+      if (window['_option_'].name === "voice-input") {
+        // window['_activityRequest_'].postResult("Activity received by consumer.");
+        // window['_activityRequest_'].close();
+      }
+    });
     const { appBar, softwareKey } = getAppProp();
     appBar.setTitleText(name);
     softwareKey.setText({ left: 'Menu', center: '', right: '' });
@@ -176,6 +190,8 @@
   }
 
   function openLSKMenu() {
+    if (window['_activityRequest_'] != null)
+      return;
     lskMenu = new OptionMenu({
       target: document.body,
       props: {
@@ -214,6 +230,8 @@
   }
 
   function openRSKMenu() {
+    if (window['_activityRequest_'] != null)
+      return;
     if (Object.keys(collections).length === 0)
       return;
     rskMenu = new OptionMenu({
@@ -254,6 +272,13 @@
         }
       }
     });
+  }
+
+  function exportVault(data) {
+    if (window['_activityRequest_'] == null)
+      return;
+    window['_activityRequest_'].postResult(data.name);
+    window['_activityRequest_'].close();
   }
 
   function openVaultModal(update: Object | null) {
@@ -356,7 +381,7 @@
 
 <main id="welcome-screen" data-pad-top="28" data-pad-bottom="30">
   {#each Object.keys(collections) as key }
-    <ListView className="{navClass}" title="{collections[key].alias}" subtitle="{collections[key].name}" onClick={() => openVault({key, ...collections[key]})}/>
+    <ListView className="{navClass}" title="{collections[key].alias}" subtitle="{collections[key].name}" onClick={() => exportVault({key, ...collections[key]})}/>
   {/each}
 </main>
 

@@ -17,14 +17,6 @@
 
   onMount(() => {
     console.log('onMount', 'App');
-    navigator.mozSetMessageHandler('activity', (activityRequest) => {
-      window['_activityRequest_'] = activityRequest;
-      window['_option_'] = window['_activityRequest_'].source;
-      if (window['_option_'].name === "voice-input") {
-        window['_activityRequest_'].postResult("Activity received by consumer.");
-        window['_activityRequest_'].close();
-      }
-    });
     document.addEventListener('visibilitychange', (evt) => {
       if (document.visibilityState === 'visible') {
         if (timeoutTimer != null) {
