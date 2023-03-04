@@ -43,6 +43,10 @@ const dbPasswordVault = localForage.createInstance({
   description : 'store password'
 });
 
+function chunkString(str, length) {
+  return str.match(new RegExp('.{1,' + length + '}', 'g'));
+}
+
 export async function getAllPasswordVault(): Promise<Object> {
   let collections = {};
   await dbPasswordVault.iterate((value, key, iterationNumber) => {
@@ -52,13 +56,17 @@ export async function getAllPasswordVault(): Promise<Object> {
 }
 
 export async function storeIntoPasswordVault(id: string|null, alias: string, name: string, data: string, publicKey: any): Promise<Object> {
+  let segments: Array<string> = chunkString(data, 50);
   if (id == null)
     id = new Date().getTime().toString();
-  const encryptedData = await rsaEncrypt(publicKey, data);
+
+  for (let i=0;i<segments.length;i++) {
+    segments[i] = await rsaEncrypt(publicKey, segments[i]);
+  }
   const inserted = await dbPasswordVault.setItem(id, {
     alias: alias,
     name: name,
-    encrypted: encryptedData
+    encrypted: segments
   });
   return Promise.resolve({
     key: id,
@@ -225,7 +233,7 @@ export async function test(passcode, message) {
     }
     let _publicKey = await convertJWKToRSAKey(publicKey);
     let _privateKey = await convertJWKToRSAKey(decryptPrivateKey);
-    const messageEncrypted = await rsaEncrypt(_publicKey, message);
+    const messageEncrypted = await rsaEncrypt(_publicKey, message); // limit 188 chars on 512mb device
     const messageDecrypted = await rsaDecrypt(_privateKey, messageEncrypted);
     if (messageDecrypted !== message) {
       throw(`FAIL: rsaEncrypt/rsaDecrypt, expected: ${message}, actual result: ${messageDecrypted}`);
