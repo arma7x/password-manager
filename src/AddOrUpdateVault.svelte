@@ -38,7 +38,7 @@
           throw("data required");
         showLoadingBar();
         try {
-          const result = await WebCryptoVault.storeIntoPasswordVault(id, name, alias, data, publicKey);
+          const result = await WebCryptoVault.storeIntoPasswordVault(id, alias, name, data, publicKey);
           hideLoadingBar();
           onSuccess(result);
         } catch (err) {
