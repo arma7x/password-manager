@@ -8,6 +8,7 @@
 
   export let title: string = 'Modal';
   export let hashedPasscode: string;
+  export let canMinimize: boolean = false;
   export let onSuccess: Function = (passcode: string) => {};
   export let onError: Function = (error: any) => {};
   export let onOpened: Function = () => {};
@@ -27,7 +28,10 @@
         softwareKey.setLeftText("Show");
     },
     softkeyRightListener: function(evt) {
-      window.close();
+      if (!canMinimize)
+        window.close();
+      else
+        onSuccess(null);
     },
     enterListener: function(evt) {
       try {
@@ -56,7 +60,7 @@
         isInvert: false,
         leftText: 'Show',
         centerText: 'Enter',
-        rightText: 'Exit'
+        rightText: canMinimize ? 'Cancel' : 'Exit'
       }
     });
     onOpened();

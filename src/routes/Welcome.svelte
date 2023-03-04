@@ -86,9 +86,12 @@
         props: {
           title: 'Passcode Required!',
           hashedPasscode: hashedPasscode,
+          canMinimize: false,
           onSuccess: (_passcode: string) => {
-            getCollections();
             passcodeModal.$destroy();
+            if (_passcode != null) {
+              getCollections();
+            }
           },
           onError: (err: any) => {
             toastMessage(err.toString());
@@ -119,20 +122,23 @@
       props: {
         title: 'Passcode Required!',
         hashedPasscode: hashedPasscode,
+        canMinimize: true,
         onSuccess: async (_passcode: string) => {
           passcodeModal.$destroy();
-          const privateKey = await WebCryptoVault.convertJWKToRSAKey(JSON.parse(await WebCryptoVault.aesDecrypt(await WebCryptoVault.getEncryptedPrivateKey(), _passcode)));
-          let chunks: Array<string> = [];
-          for (let i=0;i<data.encrypted.length;i++) {
-            const decrypted = await WebCryptoVault.rsaDecrypt(privateKey, data.encrypted[i]);
-            chunks.push(decrypted);
+          if (_passcode != null) {
+            const privateKey = await WebCryptoVault.convertJWKToRSAKey(JSON.parse(await WebCryptoVault.aesDecrypt(await WebCryptoVault.getEncryptedPrivateKey(), _passcode)));
+            let chunks: Array<string> = [];
+            for (let i=0;i<data.encrypted.length;i++) {
+              const decrypted = await WebCryptoVault.rsaDecrypt(privateKey, data.encrypted[i]);
+              chunks.push(decrypted);
+            }
+            openVaultModal({
+              key: data.key,
+              alias: data.alias,
+              name: data.name,
+              data: chunks.join(''),
+            });
           }
-          openVaultModal({
-            key: data.key,
-            alias: data.alias,
-            name: data.name,
-            data: chunks.join(''),
-          });
         },
         onError: (err: any) => {
           toastMessage(err.toString());
