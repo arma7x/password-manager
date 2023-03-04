@@ -2,8 +2,8 @@
   import { Route, navigate as goto } from "svelte-navigator";
   import { createKaiNavigator } from '../utils/navigation.ts';
   import { onMount, onDestroy } from 'svelte';
-  import Modal from '../Modal.svelte';
-  import * as crypto from '../utils/WebCryptoVault.ts';
+  import SetupPasscode from '../SetupPasscode.svelte';
+  import * as WebCryptoVault from '../utils/WebCryptoVault.ts';
   import { Toast, Toaster } from '../components/index.ts';
 
   export let location: any;
@@ -13,7 +13,7 @@
   let name: string = 'Welcome';
 
   let passcode: string = '';
-  let modal: Modal;
+  let setupPasscodeModal: SetupPasscode;
 
   let navOptions = {
     verticalNavClass: 'vertClass',
@@ -40,21 +40,15 @@
     appBar.setTitleText(name);
     softwareKey.setText({ left: 'LSK', center: 'DEMO', right: 'RSK' });
     navInstance.attachListener();
-    //try {
-      //console.time("WebCryptoVault");
-      //await crypto.test("aB1?", "Hey, i'm secured");
-      //console.timeEnd("WebCryptoVault");
-    //} catch (err) {
-      //console.error(err);
-    //}
-    if (passcode == '') {
-      modal = new Modal({
+    // await WebCryptoVault.dbAppConfig.clear()
+    if (await WebCryptoVault.getPasswordHash() == null) {
+      setupPasscodeModal = new SetupPasscode({
         target: document.body,
         props: {
-          title: 'Passcode',
+          title: 'Setup Passcode',
           onSuccess: (_passcode: string) => {
             passcode = _passcode;
-            modal.$destroy();
+            setupPasscodeModal.$destroy();
           },
           onError: (err: any) => {
             toastMessage(err.toString());
@@ -64,7 +58,7 @@
           },
           onClosed: () => {
             navInstance.attachListener();
-            modal = null;
+            setupPasscodeModal = null;
           }
         }
       });

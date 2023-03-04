@@ -19,14 +19,29 @@ const dbPasswordVault = localForage.createInstance({
   description : 'store password'
 });
 
-// getPasswordHash(): string
-// setPasswordHash(hash: string): string
+export async function getPasswordHash(): Promise<any> {
+  return await dbAppConfig.getItem('password_hash');
+}
 
-// getPublicKey(): Object
-// setPublicKey(key: Object): Object
+export async function setPasswordHash(value: string): Promise<any> {
+  return await dbAppConfig.setItem('password_hash', value);
+}
 
-// getPrivateKey(): string
-// setPrivateKey(str: string): string
+export async function getPublicKey(): Promise<any> {
+  return await dbAppConfig.getItem('public_key');
+}
+
+export async function setPublicKey(value: any): Promise<any> {
+  return await dbAppConfig.setItem('public_key', value);
+}
+
+export async function getEncryptedPrivateKey(): Promise<any> {
+  return await dbAppConfig.getItem('encrypted_private_key');
+}
+
+export async function setEncryptedPrivateKey(value: any): Promise<any> {
+  return await dbAppConfig.setItem('encrypted_private_key', value);
+}
 
 // getAllPasswordVault(): Object
 // storeIntoPasswordVault(id: number|null, alias: string, name: string, secret: string, publicKey: Key): number
@@ -46,24 +61,24 @@ const rsaConfig = {
   hash: "SHA-256"
 };
 
-async function generateRSAKey() {
+export async function generateRSAKey() {
   return await window.crypto.subtle.generateKey(rsaConfig, true, ["encrypt", "decrypt"]);
 }
 
-async function convertRSAKeyToJWK(key) {
+export async function convertRSAKeyToJWK(key) {
   return await window.crypto.subtle.exportKey("jwk", key);
 }
 
-async function convertJWKToRSAKey(jwt) {
+export async function convertJWKToRSAKey(jwt) {
   return await window.crypto.subtle.importKey("jwk", jwt, rsaConfig, true, [...jwt.key_ops]);
 }
 
-async function rsaEncrypt(publicOrPrivateKey, message) {
+export async function rsaEncrypt(publicOrPrivateKey, message) {
   let encrypted = await window.crypto.subtle.encrypt({ name: rsaConfig.name, }, publicOrPrivateKey, new TextEncoder().encode(message));
   return base64Encode(new Uint8Array(encrypted));
 }
 
-async function rsaDecrypt(privateKey, encryptedMessage) {
+export async function rsaDecrypt(privateKey, encryptedMessage) {
   let decrypted = await window.crypto.subtle.decrypt({ name: rsaConfig.name }, privateKey, base64Decode(encryptedMessage));
   return new TextDecoder().decode(new Uint8Array(decrypted));
 }
