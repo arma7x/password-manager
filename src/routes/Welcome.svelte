@@ -199,7 +199,10 @@
         focusIndex: 0,
         options: [
           { title: 'Add new vault', subtitle: 'Insert new sensitive data into vault' },
-          { title: 'HARD RESET!', subtitle: 'Clear passcode, encryption key and all vault' },
+          { title: 'FAQ', subtitle: 'Frequently Asked Questions' },
+          { title: 'Disclaimer!', subtitle: 'Notice of app usage' },
+          { title: 'Hard Reset!', subtitle: 'Clear passcode, encryption keys and all vaults' },
+          { title: 'Exit', subtitle: 'Close app' },
         ],
         softKeyCenterText: 'select',
         onSoftkeyRight: (evt, scope) => {},
@@ -208,9 +211,11 @@
           lskMenu.$destroy();
           if (scope.index == 0) {
             openVaultModal();
-          } else if (scope.index == 1) {
+          } else if (scope.index == 3) {
             await WebCryptoVault.dbAppConfig.clear();
             await WebCryptoVault.dbPasswordVault.clear();
+          } else if (scope.index ==4) {
+            window.close();
           }
         },
         onBackspace: (evt, scope) => {
