@@ -63,14 +63,14 @@ export async function storeIntoPasswordVault(id: string|null, alias: string, nam
   for (let i=0;i<segments.length;i++) {
     segments[i] = await rsaEncrypt(publicKey, segments[i]);
   }
-  const inserted = await dbPasswordVault.setItem(id, {
+  const result = await dbPasswordVault.setItem(id, {
     alias: alias,
     name: name,
     encrypted: segments
   });
   return Promise.resolve({
     key: id,
-    data: inserted
+    data: result
   });
 }
 
