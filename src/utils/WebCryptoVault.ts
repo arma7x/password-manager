@@ -13,12 +13,6 @@ const dbAppConfig = localForage.createInstance({
   description : 'store app config'
 });
 
-const dbPasswordVault = localForage.createInstance({
-  name        : dbName,
-  storeName   : 'passwordVault',
-  description : 'store password'
-});
-
 export async function getPasswordHash(): Promise<any> {
   return await dbAppConfig.getItem('password_hash');
 }
@@ -43,8 +37,35 @@ export async function setEncryptedPrivateKey(value: any): Promise<any> {
   return await dbAppConfig.setItem('encrypted_private_key', value);
 }
 
-// getAllPasswordVault(): Object
-// storeIntoPasswordVault(id: number|null, alias: string, name: string, secret: string, publicKey: Key): number
+const dbPasswordVault = localForage.createInstance({
+  name        : dbName,
+  storeName   : 'passwordVault',
+  description : 'store password'
+});
+
+export async function getAllPasswordVault(): Promise<Object> {
+  let collections = {};
+  await dbPasswordVault.iterate((value, key, iterationNumber) => {
+    collections[key] = value;
+  });
+  return Promise.resolve(collections);
+}
+
+export async function storeIntoPasswordVault(id: string|null, alias: string, name: string, data: string, publicKey: any): Promise<Object> {
+  if (id == null)
+    id = new Date().getTime().toString();
+  const encryptedData = await rsaEncrypt(publicKey, data);
+  const inserted = await dbPasswordVault.setItem(id, {
+    alias: alias,
+    name: name,
+    encrypted: encryptedData
+  });
+  return Promise.resolve({
+    key: id,
+    data: inserted
+  });
+}
+
 // getFromPasswordVault(id: number): number
 // removeFromPasswordVault(id: number): number
 // migratePasswordVault(oldPrivateKey: Key, newPublicKey: key)
@@ -65,20 +86,20 @@ export async function generateRSAKey() {
   return await window.crypto.subtle.generateKey(rsaConfig, true, ["encrypt", "decrypt"]);
 }
 
-export async function convertRSAKeyToJWK(key) {
+export async function convertRSAKeyToJWK(key: CryptoKey): Promise<Object> {
   return await window.crypto.subtle.exportKey("jwk", key);
 }
 
-export async function convertJWKToRSAKey(jwt) {
+export async function convertJWKToRSAKey(jwt): Promise<CryptoKey> {
   return await window.crypto.subtle.importKey("jwk", jwt, rsaConfig, true, [...jwt.key_ops]);
 }
 
-export async function rsaEncrypt(publicOrPrivateKey, message) {
+export async function rsaEncrypt(publicOrPrivateKey: CryptoKey, message): Promise<string> {
   let encrypted = await window.crypto.subtle.encrypt({ name: rsaConfig.name, }, publicOrPrivateKey, new TextEncoder().encode(message));
   return base64Encode(new Uint8Array(encrypted));
 }
 
-export async function rsaDecrypt(privateKey, encryptedMessage) {
+export async function rsaDecrypt(privateKey: CryptoKey, encryptedMessage): Promise<string> {
   let decrypted = await window.crypto.subtle.decrypt({ name: rsaConfig.name }, privateKey, base64Decode(encryptedMessage));
   return new TextDecoder().decode(new Uint8Array(decrypted));
 }
