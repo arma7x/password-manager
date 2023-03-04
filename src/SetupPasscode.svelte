@@ -2,7 +2,7 @@
 
   import { onMount, onDestroy } from 'svelte';
   import { createKaiNavigator } from './utils/navigation.ts';
-  import { SoftwareKey, Dialog } from './components/index.ts';
+  import { SoftwareKey, Dialog, LoadingBar } from './components/index.ts';
   import Passcode from './Passcode.svelte';
   import {
     checkPasscodeRequirement,
@@ -28,6 +28,7 @@
 
   let softwareKey: SoftwareKey;
   let dialog: Dialog;
+  let loadingBar: LoadingBar;
 
   let navOptions = {
     verticalNavClass: 'navClassModal',
@@ -83,7 +84,30 @@
     });
   }
 
+  function showLoadingBar() {
+    loadingBar = new LoadingBar({
+      target: document.body,
+      props: {
+        onOpened: () => {
+          navInstance.detachListener();
+        },
+        onClosed: () => {
+          navInstance.attachListener();
+          loadingBar = null;
+        }
+      }
+    });
+  }
+
+  function hideLoadingBar() {
+    if (loadingBar != null) {
+      loadingBar.$destroy();
+      loadingBar = null;
+    }
+  }
+
   async function setup() {
+    showLoadingBar()
     try {
       checkPasscodeRequirement(passcode, 10);
       const hash = hashPassword(passcode);
@@ -95,11 +119,14 @@
         await setPasswordHash(hash);
         await setPublicKey(publicKey);
         await setEncryptedPrivateKey(encryptPrivateKey);
+        hideLoadingBar();
         onSuccess(passcode);
       } else {
+        hideLoadingBar();
         throw("Fail hashing passcode");
       }
     } catch (err) {
+      hideLoadingBar();
       await dbAppConfig.clear();
       onError(err);
     }
