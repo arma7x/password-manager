@@ -13,20 +13,11 @@
     return {appBar, softwareKey, localization};
   }
 
-  let timeoutTimer: any;
-
   onMount(() => {
     console.log('onMount', 'App');
     document.addEventListener('visibilitychange', (evt) => {
-      if (document.visibilityState === 'visible') {
-        if (timeoutTimer != null) {
-          clearTimeout(timeoutTimer);
-          timeoutTimer = null;
-        }
-      } else {
-        timeoutTimer = setTimeout(() => {
-          window.close();
-        }, 60000);
+      if (document.visibilityState === 'hidden') {
+        window.close();
       }
     });
   });
