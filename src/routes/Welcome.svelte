@@ -11,7 +11,7 @@
   export let navigate: any;
   export let getAppProp: Function;
 
-  let name: string = 'Welcome';
+  let name: string = 'Password Manager';
 
   let passcode: string = '';
   let passcodeModal: SetupPasscode | RequiredPasscode;
