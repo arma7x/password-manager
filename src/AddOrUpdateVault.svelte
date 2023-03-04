@@ -120,7 +120,7 @@
     <div class="kai-dialog-header">{title}</div>
     <div class="kai-dialog-body">
       <TextInputField className="{navClass}" label="Alias" placeholder="Alias" value="{alias}" type="text" {onInput} {onFocus} {onBlur} />
-      <TextAreaField className="{navClass}" label="Data" placeholder="Data" value="{data}" type="text" rows={2} {onInput} {onFocus} {onBlur}/>
+      <TextAreaField className="{navClass}" label="Data(sensitive information)" placeholder="Data" value="{data}" type="text" rows={2} {onInput} {onFocus} {onBlur}/>
       <TextInputField className="{navClass}" label="Name" placeholder="Name" value="{name}" type="text" {onInput} {onFocus} {onBlur} />
     </div>
   </div>

@@ -75,7 +75,9 @@ export async function storeIntoPasswordVault(id: string|null, alias: string, nam
 }
 
 // getFromPasswordVault(id: number): number
-// removeFromPasswordVault(id: number): number
+export async function removeFromPasswordVault(key: string) {
+  return await dbPasswordVault.removeItem(key);
+}
 // migratePasswordVault(oldPrivateKey: Key, newPublicKey: key)
 
 export {
