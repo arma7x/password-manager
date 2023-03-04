@@ -18,8 +18,8 @@
 
   let navOptions = {
     verticalNavClass: 'vertClass',
-    softkeyLeftListener: function(evt) {
-      console.log('softkeyLeftListener', name);
+    softkeyLeftListener: async function(evt) {
+      await WebCryptoVault.dbAppConfig.clear();
     },
     softkeyRightListener: function(evt) {
       console.log('softkeyRightListener', name);
@@ -39,9 +39,8 @@
     console.log('onMount', name);
     const { appBar, softwareKey } = getAppProp();
     appBar.setTitleText(name);
-    softwareKey.setText({ left: 'LSK', center: 'DEMO', right: 'RSK' });
+    softwareKey.setText({ left: 'Reset', center: 'DEMO', right: 'RSK' });
     navInstance.attachListener();
-    // await WebCryptoVault.dbAppConfig.clear()
     const hashedPasscode = await WebCryptoVault.getPasswordHash()
     if (hashedPasscode == null) {
       passcodeModal = new SetupPasscode({
