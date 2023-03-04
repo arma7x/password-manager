@@ -3,6 +3,7 @@
   import { createKaiNavigator } from '../utils/navigation.ts';
   import { onMount, onDestroy } from 'svelte';
   import SetupPasscode from '../SetupPasscode.svelte';
+  import RequiredPasscode from '../RequiredPasscode.svelte';
   import * as WebCryptoVault from '../utils/WebCryptoVault.ts';
   import { Toast, Toaster } from '../components/index.ts';
 
@@ -13,7 +14,7 @@
   let name: string = 'Welcome';
 
   let passcode: string = '';
-  let setupPasscodeModal: SetupPasscode;
+  let passcodeModal: SetupPasscode | RequiredPasscode;
 
   let navOptions = {
     verticalNavClass: 'vertClass',
@@ -41,14 +42,15 @@
     softwareKey.setText({ left: 'LSK', center: 'DEMO', right: 'RSK' });
     navInstance.attachListener();
     // await WebCryptoVault.dbAppConfig.clear()
-    if (await WebCryptoVault.getPasswordHash() == null) {
-      setupPasscodeModal = new SetupPasscode({
+    const hashedPasscode = await WebCryptoVault.getPasswordHash()
+    if (hashedPasscode == null) {
+      passcodeModal = new SetupPasscode({
         target: document.body,
         props: {
           title: 'Setup Passcode',
           onSuccess: (_passcode: string) => {
             passcode = _passcode;
-            setupPasscodeModal.$destroy();
+            passcodeModal.$destroy();
           },
           onError: (err: any) => {
             toastMessage(err.toString());
@@ -58,7 +60,29 @@
           },
           onClosed: () => {
             navInstance.attachListener();
-            setupPasscodeModal = null;
+            passcodeModal = null;
+          }
+        }
+      });
+    } else {
+      passcodeModal = new RequiredPasscode({
+        target: document.body,
+        props: {
+          title: 'Passcode Required!',
+          hashedPasscode: hashedPasscode,
+          onSuccess: (_passcode: string) => {
+            passcode = _passcode;
+            passcodeModal.$destroy();
+          },
+          onError: (err: any) => {
+            toastMessage(err.toString());
+          },
+          onOpened: () => {
+            navInstance.detachListener();
+          },
+          onClosed: () => {
+            navInstance.attachListener();
+            passcodeModal = null;
           }
         }
       });
