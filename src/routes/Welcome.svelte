@@ -28,7 +28,7 @@
   } else {
     const { softwareKey } = getAppProp();
     if (window['_activityRequest_'] != null)
-      softwareKey.setText({ left: '', center: '+', right: '' });
+      softwareKey.setText({ left: '', center: 'EMPTY', right: '' });
     else
       softwareKey.setText({ left: 'Menu', center: '+', right: '' });
   }
@@ -68,14 +68,11 @@
     navigator.mozSetMessageHandler('activity', (activityRequest) => {
       window['_activityRequest_'] = activityRequest;
       window['_option_'] = window['_activityRequest_'].source;
-      if (window['_option_'].name === "voice-input") {
-        // window['_activityRequest_'].postResult("Activity received by consumer.");
-        // window['_activityRequest_'].close();
-      }
+      if (window['_option_'].name === "voice-input") {}
     });
     const { appBar, softwareKey } = getAppProp();
     appBar.setTitleText(name);
-    softwareKey.setText({ left: 'Menu', center: '+', right: '' });
+    softwareKey.setText({ left: 'Menu', center: '', right: '' });
     navInstance.attachListener();
     const hashedPasscode = await getPasswordHash()
     if (hashedPasscode == null) {
@@ -193,7 +190,19 @@
   async function getCollections() {
     let publicKey = await convertJWKToRSAKey(await getPublicKey());
     if (publicKey != null) {
+      const { softwareKey } = getAppProp();
       collections = await getAllPasswordVault();
+      if (Object.keys(collections).length > 0) {
+        if (window['_activityRequest_'] != null)
+          softwareKey.setText({ left: '', center: 'EXPORT', right: '' });
+        else
+          softwareKey.setText({ left: 'Menu', center: '+', right: 'Options' });
+      } else {
+        if (window['_activityRequest_'] != null)
+          softwareKey.setText({ left: '', center: 'EMPTY', right: '' });
+        else
+          softwareKey.setText({ left: 'Menu', center: '+', right: '' });
+      }
       focusCursorToFirst();
     }
   }
