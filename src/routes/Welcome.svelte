@@ -269,10 +269,9 @@
         title: 'Menu',
         focusIndex: 0,
         options: [
-          { title: 'Change passcode', subtitle: 'Change app passcode' }, // TODO
+          { title: 'Change passcode', subtitle: 'Change app passcode' },
           { title: 'FAQ', subtitle: 'Frequently Asked Questions' }, // TODO
           { title: 'Disclaimer Notice', subtitle: 'Notice of app usage' },  // TODO
-          // { title: 'Hard Reset', subtitle: 'Clear passcode, encryption keys and all vaults' },
           { title: 'Exit', subtitle: 'Close app' },
         ],
         softKeyCenterText: 'select',
@@ -282,10 +281,11 @@
           lskMenu.$destroy();
           if (scope.index == 0) {
             changePasscode();
+          } else if (scope.index == 1) {
+            // TODO FAQ
+          } else if (scope.index == 2) {
+            // TODO Disclaimer Notice
           } else if (scope.index == 3) {
-            await dbAppConfig.clear();
-            await dbPasswordVault.clear();
-          } else if (scope.index == 4) {
             window.close();
           }
         },

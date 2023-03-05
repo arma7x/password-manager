@@ -165,9 +165,9 @@
   <div class="kai-dialog-content">
     <div class="kai-dialog-header">{title}</div>
     <div class="kai-dialog-body">
-      <TextInputField className="{navClass}" label="Alias" placeholder="Alias" value="{alias}" type="text" {onInput} {onFocus} {onBlur} />
-      <TextAreaField className="{navClass}" label="Data(sensitive information)" placeholder="Data" value="{data}" type="text" rows={2} {onInput} {onFocus} {onBlur}/>
-      <TextInputField className="{navClass}" label="Name" placeholder="Name" value="{name}" type="text" {onInput} {onFocus} {onBlur} />
+      <TextInputField className="{navClass}" label={null} placeholder="Short description" value="{alias}" type="text" {onInput} {onFocus} {onBlur} />
+      <TextAreaField className="{navClass}" label={null} placeholder="Enter sensitive data here" value="{data}" type="text" rows={3} {onInput} {onFocus} {onBlur}/>
+      <TextInputField className="{navClass}" label={null} placeholder="Maybe a username" value="{name}" type="text" {onInput} {onFocus} {onBlur} />
     </div>
   </div>
 </div>
