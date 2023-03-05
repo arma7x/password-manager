@@ -5,6 +5,30 @@ localForage.setDriver(localForage.INDEXEDDB);
 
 declare var dcodeIO:any;
 
+export interface RawVault {
+  key: string | null,
+  alias: string,
+  name: string,
+  data: string,
+}
+
+export interface EncryptedVault {
+  alias: string,
+  name: string,
+  encrypted: Array<string>
+}
+
+export interface EncryptedVaultRow extends EncryptedVault {
+  key: string,
+}
+
+export interface EncryptedVaultBox {
+  key: string,
+  data: EncryptedVault
+}
+
+export type OpenVaultCallback = (RawVault) => void;
+
 const dbName = 'DATABASE';
 
 const dbAppConfig = localForage.createInstance({
@@ -55,26 +79,25 @@ export async function getAllPasswordVault(): Promise<Object> {
   return Promise.resolve(collections);
 }
 
-export async function storeIntoPasswordVault(id: string|null, alias: string, name: string, data: string, publicKey: any): Promise<Object> {
+export async function storeIntoPasswordVault(key: string | null, alias: string, name: string, data: string, publicKey: any): Promise<Object> {
   let segments: Array<string> = chunkString(data, 50);
-  if (id == null)
-    id = new Date().getTime().toString();
+  if (key == null)
+    key = new Date().getTime().toString();
 
   for (let i=0;i<segments.length;i++) {
     segments[i] = await rsaEncrypt(publicKey, segments[i]);
   }
-  const result = await dbPasswordVault.setItem(id, {
+  const result = await dbPasswordVault.setItem(key, {
     alias: alias,
     name: name,
     encrypted: segments
   });
   return Promise.resolve({
-    key: id,
+    key: key,
     data: result
   });
 }
 
-// getFromPasswordVault(id: number): number
 export async function removeFromPasswordVault(key: string) {
   return await dbPasswordVault.removeItem(key);
 }

@@ -6,6 +6,7 @@
   import RequiredPasscode from '../RequiredPasscode.svelte';
   import AddOrUpdateVault from '../AddOrUpdateVault.svelte';
   import * as WebCryptoVault from '../utils/WebCryptoVault.ts';
+  import { type RawVault, type EncryptedVaultRow, OpenVaultCallback, } from '../utils/WebCryptoVault.ts';
   import { Toast, Toaster, ListView, OptionMenu, Dialog } from '../components/index.ts';
 
   export let location: any;
@@ -132,20 +133,18 @@
     navInstance.detachListener();
   });
 
-  type openVaultCallback = (any) => void;
-
-  function openVaultUpdateCallback(data: any) {
+  function openVaultUpdateCallback(data: RawVault) {
     openVaultModal(data);
   }
 
-  function openVaultExportCallback(data: any) {
+  function openVaultExportCallback(data: RawVault) {
     if (window['_activityRequest_'] != null) {
       window['_activityRequest_'].postResult(data.data);
       window['_activityRequest_'].close();
     }
   }
 
-  async function openVault(data: any, callback: openVaultCallback) {
+  async function openVault(data: EncryptedVaultRow, callback: OpenVaultCallback) {
     const hashedPasscode = await WebCryptoVault.getPasswordHash()
     if (hashedPasscode == null)
       return;
