@@ -101,7 +101,10 @@ export async function storeIntoPasswordVault(key: string | null, alias: string, 
 export async function removeFromPasswordVault(key: string) {
   return await dbPasswordVault.removeItem(key);
 }
-// migratePasswordVault(oldPrivateKey: Key, newPublicKey: key)
+
+export async function pushIntoPasswordVault(key: string, value: EncryptedVault): Promise<EncryptedVault> {
+  return await dbPasswordVault.setItem(key, value);
+}
 
 export {
   dbAppConfig,

@@ -6,6 +6,7 @@
   import RequiredPasscode from '../modals/RequiredPasscode.svelte';
   import AddOrUpdateVault from '../modals/AddOrUpdateVault.svelte';
   import QRPrinter from '../modals/QRPrinter.svelte';
+  import ChangePasscode from '../modals/ChangePasscode.svelte';
   import { type RawVault, type EncryptedVaultRow, OpenVaultCallback, getPasswordHash, convertJWKToRSAKey, aesDecrypt, getEncryptedPrivateKey, rsaDecrypt, getPublicKey, getAllPasswordVault, dbAppConfig, dbPasswordVault, removeFromPasswordVault } from '../utils/WebCryptoVault.ts';
   import { Toast, Toaster, ListView, OptionMenu, Dialog } from '../components/index.ts';
 
@@ -16,9 +17,6 @@
   const navClass = "welcomeNavClass";
 
   let name: string = 'Password Manager';
-
-  let passcodeModal: SetupPasscode | RequiredPasscode;
-  let collections: any = {};
 
   $: if (Object.keys(collections).length > 0) {
     const { softwareKey } = getAppProp();
@@ -34,12 +32,16 @@
       softwareKey.setText({ left: 'Menu', center: '+', right: '' });
   }
 
+  let passcodeModal: SetupPasscode | RequiredPasscode;
   let exportVaultMenu: OptionMenu;
   let lskMenu: OptionMenu;
   let rskMenu: OptionMenu;
   let dialog: Dialog;
   let addOrUpdateVaultModal: AddOrUpdateVault;
   let qrModal: QRPrinter;
+  let changePasscodeModal: ChangePasscode;
+
+  let collections: any = {};
 
   let navOptions = {
     verticalNavClass: navClass,
@@ -84,6 +86,9 @@
           title: 'Setup Passcode',
           onSuccess: (_passcode: string) => {
             passcodeModal.$destroy();
+            if (_passcode != null) {
+              getCollections();
+            }
           },
           onError: (err: any) => {
             toastMessage(err.toString());
@@ -128,6 +133,29 @@
   onDestroy(() => {
     navInstance.detachListener();
   });
+
+  function changePasscode() {
+    changePasscodeModal = new ChangePasscode({
+      target: document.body,
+      props: {
+        title: 'Change Passcode',
+        onSuccess: async (_passcode: string) => {
+          changePasscodeModal.$destroy();
+          await getCollections();
+        },
+        onError: (err: any) => {
+          toastMessage(err.toString());
+        },
+        onOpened: () => {
+          navInstance.detachListener();
+        },
+        onClosed: () => {
+          navInstance.attachListener();
+          changePasscodeModal = null;
+        }
+      }
+    });
+  }
 
   function openVaultUpdateCallback(data: RawVault) {
     openVaultModal(data);
@@ -252,7 +280,7 @@
         onEnter: async (evt, scope) => {
           lskMenu.$destroy();
           if (scope.index == 0) {
-
+            changePasscode();
           } else if (scope.index == 3) {
             await dbAppConfig.clear();
             await dbPasswordVault.clear();
