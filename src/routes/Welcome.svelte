@@ -2,9 +2,9 @@
   import { Route, navigate as goto } from "svelte-navigator";
   import { createKaiNavigator } from '../utils/navigation.ts';
   import { onMount, onDestroy } from 'svelte';
-  import SetupPasscode from '../SetupPasscode.svelte';
-  import RequiredPasscode from '../RequiredPasscode.svelte';
-  import AddOrUpdateVault from '../AddOrUpdateVault.svelte';
+  import SetupPasscode from '../modals/SetupPasscode.svelte';
+  import RequiredPasscode from '../modals/RequiredPasscode.svelte';
+  import AddOrUpdateVault from '../modals/AddOrUpdateVault.svelte';
   import { type RawVault, type EncryptedVaultRow, OpenVaultCallback, getPasswordHash, convertJWKToRSAKey, aesDecrypt, getEncryptedPrivateKey, rsaDecrypt, getPublicKey, getAllPasswordVault, dbAppConfig, dbPasswordVault, removeFromPasswordVault } from '../utils/WebCryptoVault.ts';
   import { Toast, Toaster, ListView, OptionMenu, Dialog } from '../components/index.ts';
 

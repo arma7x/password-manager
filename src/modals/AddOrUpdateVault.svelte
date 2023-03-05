@@ -1,10 +1,10 @@
 <script lang="ts">
 
   import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from './utils/navigation.ts';
-  import { SoftwareKey, TextInputField, TextAreaField, LoadingBar } from './components/index.ts';
+  import { createKaiNavigator } from '../utils/navigation.ts';
+  import { SoftwareKey, TextInputField, TextAreaField, LoadingBar } from '../components/index.ts';
   import Passcode from './Passcode.svelte';
-  import * as WebCryptoVault from './utils/WebCryptoVault.ts';
+  import * as WebCryptoVault from '../utils/WebCryptoVault.ts';
 
   export let title: string = 'Modal';
   export let id: string | null;

@@ -1,12 +1,14 @@
 <script lang="ts">
 
   import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from './utils/navigation.ts';
-  import { SoftwareKey } from './components/index.ts';
+  import { createKaiNavigator } from '../utils/navigation.ts';
+  import { SoftwareKey } from '../components/index.ts';
   import Passcode from './Passcode.svelte';
-  import { checkPasscodeRequirement } from './utils/WebCryptoVault.ts';
+  import { checkPasscodeRequirement, comparePassword } from '../utils/WebCryptoVault.ts';
 
   export let title: string = 'Modal';
+  export let hashedPasscode: string;
+  export let canMinimize: boolean = false;
   export let onSuccess: Function = (passcode: string) => {};
   export let onError: Function = (error: any) => {};
   export let onOpened: Function = () => {};
@@ -20,14 +22,23 @@
   let navOptions = {
     verticalNavClass: 'navClassModal',
     softkeyLeftListener: function(evt) {
-      refPasscode.toggleVisibility();
+      if (refPasscode.toggleVisibility())
+        softwareKey.setLeftText("Hide");
+      else
+        softwareKey.setLeftText("Show");
     },
     softkeyRightListener: function(evt) {
-      window.close();
+      if (!canMinimize)
+        window.close();
+      else
+        onSuccess(null);
     },
     enterListener: function(evt) {
       try {
         checkPasscodeRequirement(passcode, 10);
+        if (comparePassword(passcode, hashedPasscode) == false) {
+          throw("Invalid passcode");
+        }
         onSuccess(passcode);
       } catch (err) {
         onError(err);
@@ -47,9 +58,9 @@
       target: document.body,
       props: {
         isInvert: false,
-        leftText: 'Toggle',
+        leftText: 'Show',
         centerText: 'Enter',
-        rightText: 'Exit'
+        rightText: canMinimize ? 'Cancel' : 'Exit'
       }
     });
     onOpened();
