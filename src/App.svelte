@@ -25,12 +25,14 @@
       slot: 'kaios',
       onerror: err => console.error(err),
       onready: ad => {
-        const ae = document.activeElement;
-        ad.call('display')
-        ad.on('close', () => {
-          ae.focus();
-        });
-        ad.on('display', () => {});
+        if (window['_activityRequest_'] == null) {
+          const ae = document.activeElement;
+          ad.call('display')
+          ad.on('close', () => {
+            ae.focus();
+          });
+          ad.on('display', () => {});
+        }
       }
     });
   });
