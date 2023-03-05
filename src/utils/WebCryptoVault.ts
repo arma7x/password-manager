@@ -71,15 +71,15 @@ function chunkString(str, length) {
   return str.match(new RegExp('.{1,' + length + '}', 'g'));
 }
 
-export async function getAllPasswordVault(): Promise<Object> {
+export async function getAllPasswordVault(): Promise<{[key: string]: EncryptedVault}> {
   let collections = {};
-  await dbPasswordVault.iterate((value, key, iterationNumber) => {
+  await dbPasswordVault.iterate((value: EncryptedVault, key: string, iterationNumber) => {
     collections[key] = value;
   });
   return Promise.resolve(collections);
 }
 
-export async function storeIntoPasswordVault(key: string | null, alias: string, name: string, data: string, publicKey: any): Promise<Object> {
+export async function storeIntoPasswordVault(key: string | null, alias: string, name: string, data: string, publicKey: any): Promise<EncryptedVaultBox> {
   let segments: Array<string> = chunkString(data, 50);
   if (key == null)
     key = new Date().getTime().toString();
@@ -87,7 +87,7 @@ export async function storeIntoPasswordVault(key: string | null, alias: string, 
   for (let i=0;i<segments.length;i++) {
     segments[i] = await rsaEncrypt(publicKey, segments[i]);
   }
-  const result = await dbPasswordVault.setItem(key, {
+  const result: EncryptedVault = await dbPasswordVault.setItem(key, {
     alias: alias,
     name: name,
     encrypted: segments
