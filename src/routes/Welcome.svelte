@@ -5,6 +5,7 @@
   import SetupPasscode from '../modals/SetupPasscode.svelte';
   import RequiredPasscode from '../modals/RequiredPasscode.svelte';
   import AddOrUpdateVault from '../modals/AddOrUpdateVault.svelte';
+  import QRPrinter from '../modals/QRPrinter.svelte';
   import { type RawVault, type EncryptedVaultRow, OpenVaultCallback, getPasswordHash, convertJWKToRSAKey, aesDecrypt, getEncryptedPrivateKey, rsaDecrypt, getPublicKey, getAllPasswordVault, dbAppConfig, dbPasswordVault, removeFromPasswordVault } from '../utils/WebCryptoVault.ts';
   import { Toast, Toaster, ListView, OptionMenu, Dialog } from '../components/index.ts';
 
@@ -38,6 +39,7 @@
   let rskMenu: OptionMenu;
   let dialog: Dialog;
   let addOrUpdateVaultModal: AddOrUpdateVault;
+  let qrModal: QRPrinter;
 
   let navOptions = {
     verticalNavClass: navClass,
@@ -136,6 +138,28 @@
       window['_activityRequest_'].postResult(data.data);
       window['_activityRequest_'].close();
     }
+  }
+
+  function openVaultQRCallback(data: RawVault) {
+    qrModal = new QRPrinter({
+      target: document.body,
+      props: {
+        title: data.name,
+        data: data.data,
+        onBackspace: (evt) => {
+          qrModal.$destroy();
+          evt.preventDefault();
+          evt.stopPropagation();
+        },
+        onOpened: () => {
+          navInstance.detachListener();
+        },
+        onClosed: () => {
+          navInstance.attachListener();
+          qrModal = null;
+        }
+      }
+    });
   }
 
   async function openVault(data: EncryptedVaultRow, callback: OpenVaultCallback) {
@@ -264,7 +288,7 @@
         focusIndex: 0,
         options: [
           { title: 'Update', subtitle: 'Update data inside vault storage' },
-          { title: 'Generate QR-Code', subtitle: 'Generate qr-code contain(only sensitive data)' },
+          { title: 'Generate QR-Code', subtitle: 'Convert sensitive data into qr-code' },
           { title: 'Remove', subtitle: 'Remove from vault storage' },
         ],
         softKeyCenterText: 'select',
@@ -276,8 +300,8 @@
             const key = Object.keys(collections)[navInstance.verticalNavIndex];
             openVault({key, ...collections[key]}, openVaultUpdateCallback);
           } else if (scope.index == 1) {
-            // TODO
-            console.log(collections[Object.keys(collections)[navInstance.verticalNavIndex]]);
+            const key = Object.keys(collections)[navInstance.verticalNavIndex];
+            openVault({key, ...collections[key]}, openVaultQRCallback);
           } else if (scope.index == 2) {
             removeVault(Object.keys(collections)[navInstance.verticalNavIndex]);
           }
