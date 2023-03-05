@@ -29,7 +29,7 @@
     "default_locale": "en-US",
     "developer": {
       "name": "arma7x",
-      "url": "https://github.com/arma7x/kaios-svelte-starter"
+      "url": "https://github.com/arma7x/password-manager"
     },
     "chrome": {
       "statusbar": "overlap"
