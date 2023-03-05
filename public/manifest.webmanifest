@@ -1,6 +1,6 @@
 {
-  "name": "Svelte App",
-  "description": "A starter template for Svelte and TypeScript.",
+  "name": "Password Manager",
+  "description": "A Password Manager for KaiOS",
   "start_url": "/index.html",
   "theme": "#ff3e00",
   "theme_color": "#ff3e00",
@@ -24,7 +24,7 @@
   ],
   "b2g_features": {
     "version": "3.0.0",
-    "type": "privileged",
+    "type": "web",
     "core": true,
     "default_locale": "en-US",
     "developer": {
@@ -34,14 +34,18 @@
     "chrome": {
       "statusbar": "overlap"
     },
-    "origin": "svelte-app",
-    "permissions": {},
+    "origin": "password-manager",
+    "permissions": {
+      "video-capture": {
+        "description": "Required for qr-code reader"
+      }
+    },
     "dependencies": {},
     "locales": {
       "en-US": {
-        "name": "Svelte App",
-        "subtitle": "A starter template for Svelte and TypeScript.",
-        "description": "A starter template for Svelte and TypeScript."
+        "name": "Password Manager",
+        "subtitle": "A Password Manager for KaiOS",
+        "description": "A Password Manager for KaiOS"
       }
     }
   }

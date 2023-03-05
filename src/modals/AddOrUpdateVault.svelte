@@ -5,6 +5,7 @@
   import { SoftwareKey, TextInputField, TextAreaField, LoadingBar } from '../components/index.ts';
   import Passcode from './Passcode.svelte';
   import * as WebCryptoVault from '../utils/WebCryptoVault.ts';
+  import QRScanner from './QRScanner.svelte';
 
   export let title: string = 'Modal';
   export let id: string | null;
@@ -20,10 +21,13 @@
 
   let softwareKey: SoftwareKey;
   let loadingBar: LoadingBar;
+  let qrScanner: QRScanner;
 
   let navOptions = {
     verticalNavClass: navClass,
-    softkeyLeftListener: function(evt) {},
+    softkeyLeftListener: function(evt) {
+      scanQR(navInstance.verticalNavIndex);
+    },
     softkeyRightListener: function(evt) {
       onSuccess(Promise.resolve(null));
     },
@@ -74,6 +78,48 @@
     softwareKey.$destroy();
     onClosed();
   })
+
+  function scanQR(index: number) {
+    qrScanner = new QRScanner({
+      target: document.body,
+      props: {
+        title: 'Scan QR-Code',
+        onBackspace: (evt) => {
+          qrScanner.$destroy();
+          evt.preventDefault();
+          evt.stopPropagation();
+        },
+        onOpened: () => {
+          document.activeElement.blur();
+          navInstance.detachListener();
+        },
+        onClosed: () => {
+          navInstance.attachListener();
+          navInstance.verticalNavIndex = index;
+          setTimeout(() => {
+            navInstance.navigateListNav(0);
+            setTimeout(() => {
+              const cursor = document.getElementsByClassName(navClass)[navInstance.verticalNavIndex];
+              if (cursor) {
+                cursor.classList.add('focus');
+              }
+            }, 150)
+          }, 150);
+          qrScanner = null;
+        },
+        callback: (token) => {
+          qrScanner.$destroy();
+          if (index == 0) {
+            alias = token;
+          } else if (index == 1) {
+            data = token;
+          } else if (index == 2) {
+            name = token;
+          }
+        }
+      }
+    });
+  }
 
   function showLoadingBar() {
     loadingBar = new LoadingBar({

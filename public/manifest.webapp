@@ -24,7 +24,11 @@
   },
   "origin": "app://password-manager.arma7x.com",
   "type": "web",
-  "permissions": {},
+  "permissions": {
+    "video-capture": {
+      "description": "Required for qr-code reader"
+    }
+  },
   "locales": {
     "en-US": {
       "name": "Password Manager",

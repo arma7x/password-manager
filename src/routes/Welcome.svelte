@@ -474,6 +474,7 @@
 <style>
   #welcome-screen {
     overflow: scroll;
+    overflow-x: hidden;
     width: 100%;
   }
 </style>
