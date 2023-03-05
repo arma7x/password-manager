@@ -5,8 +5,7 @@
   import SetupPasscode from '../SetupPasscode.svelte';
   import RequiredPasscode from '../RequiredPasscode.svelte';
   import AddOrUpdateVault from '../AddOrUpdateVault.svelte';
-  import * as WebCryptoVault from '../utils/WebCryptoVault.ts';
-  import { type RawVault, type EncryptedVaultRow, OpenVaultCallback, } from '../utils/WebCryptoVault.ts';
+  import { type RawVault, type EncryptedVaultRow, OpenVaultCallback, getPasswordHash, convertJWKToRSAKey, aesDecrypt, getEncryptedPrivateKey, rsaDecrypt, getPublicKey, getAllPasswordVault, dbAppConfig, dbPasswordVault, removeFromPasswordVault } from '../utils/WebCryptoVault.ts';
   import { Toast, Toaster, ListView, OptionMenu, Dialog } from '../components/index.ts';
 
   export let location: any;
@@ -76,9 +75,9 @@
     });
     const { appBar, softwareKey } = getAppProp();
     appBar.setTitleText(name);
-    softwareKey.setText({ left: 'Menu', center: '', right: '' });
+    softwareKey.setText({ left: 'Menu', center: '+', right: '' });
     navInstance.attachListener();
-    const hashedPasscode = await WebCryptoVault.getPasswordHash()
+    const hashedPasscode = await getPasswordHash()
     if (hashedPasscode == null) {
       passcodeModal = new SetupPasscode({
         target: document.body,
@@ -143,7 +142,7 @@
   }
 
   async function openVault(data: EncryptedVaultRow, callback: OpenVaultCallback) {
-    const hashedPasscode = await WebCryptoVault.getPasswordHash()
+    const hashedPasscode = await getPasswordHash()
     if (hashedPasscode == null)
       return;
     passcodeModal = new RequiredPasscode({
@@ -155,10 +154,10 @@
         onSuccess: async (_passcode: string) => {
           passcodeModal.$destroy();
           if (_passcode != null) {
-            const privateKey = await WebCryptoVault.convertJWKToRSAKey(JSON.parse(await WebCryptoVault.aesDecrypt(await WebCryptoVault.getEncryptedPrivateKey(), _passcode)));
+            const privateKey = await convertJWKToRSAKey(JSON.parse(await aesDecrypt(await getEncryptedPrivateKey(), _passcode)));
             let chunks: Array<string> = [];
             for (let i=0;i<data.encrypted.length;i++) {
-              const decrypted = await WebCryptoVault.rsaDecrypt(privateKey, data.encrypted[i]);
+              const decrypted = await rsaDecrypt(privateKey, data.encrypted[i]);
               chunks.push(decrypted);
             }
             callback({ key: data.key, alias: data.alias, name: data.name, data: chunks.join('') });
@@ -192,9 +191,9 @@
   }
 
   async function getCollections() {
-    let publicKey = await WebCryptoVault.convertJWKToRSAKey(await WebCryptoVault.getPublicKey());
+    let publicKey = await convertJWKToRSAKey(await getPublicKey());
     if (publicKey != null) {
-      collections = await WebCryptoVault.getAllPasswordVault();
+      collections = await getAllPasswordVault();
       focusCursorToFirst();
     }
   }
@@ -222,8 +221,8 @@
           if (scope.index == 0) {
 
           } else if (scope.index == 3) {
-            await WebCryptoVault.dbAppConfig.clear();
-            await WebCryptoVault.dbPasswordVault.clear();
+            await dbAppConfig.clear();
+            await dbPasswordVault.clear();
           } else if (scope.index == 4) {
             window.close();
           }
@@ -384,7 +383,7 @@
         onSoftkeyRight: async (evt) => {
           try {
             const key = Object.keys(collections)[navInstance.verticalNavIndex];
-            await WebCryptoVault.removeFromPasswordVault(key);
+            await removeFromPasswordVault(key);
             delete collections[key];
             collections = {...collections};
             if (Object.keys(collections).length === 1) {
