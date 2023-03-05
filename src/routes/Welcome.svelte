@@ -24,13 +24,13 @@
     if (window['_activityRequest_'] != null)
       softwareKey.setText({ left: '', center: 'SELECT', right: '' });
     else
-      softwareKey.setText({ left: 'Menu', center: '', right: 'Options' });
+      softwareKey.setText({ left: 'Menu', center: '+', right: 'Options' });
   } else {
     const { softwareKey } = getAppProp();
     if (window['_activityRequest_'] != null)
-      softwareKey.setText({ left: '', center: '', right: '' });
+      softwareKey.setText({ left: '', center: '+', right: '' });
     else
-      softwareKey.setText({ left: 'Menu', center: '', right: '' });
+      softwareKey.setText({ left: 'Menu', center: '+', right: '' });
   }
 
   let lskMenu: OptionMenu;
@@ -47,9 +47,13 @@
       openRSKMenu();
     },
     enterListener: function(evt) {
-      const navClasses = document.getElementsByClassName(navClass);
-      if (navClasses[this.verticalNavIndex] != null) {
-        navClasses[this.verticalNavIndex].click();
+      if (window['_activityRequest_'] == null) {
+        openVaultModal();
+      } else {
+        const navClasses = document.getElementsByClassName(navClass);
+        if (navClasses[this.verticalNavIndex] != null) {
+          navClasses[this.verticalNavIndex].click();
+        }
       }
     },
     backspaceListener: function(evt) {
@@ -198,11 +202,10 @@
         title: 'Menu',
         focusIndex: 0,
         options: [
-          { title: 'Add new vault', subtitle: 'Insert new sensitive data into vault' },
           { title: 'Change passcode', subtitle: 'Change app passcode' }, // TODO
           { title: 'FAQ', subtitle: 'Frequently Asked Questions' }, // TODO
-          { title: 'Disclaimer!', subtitle: 'Notice of app usage' },  // TODO
-          { title: 'Hard Reset!', subtitle: 'Clear passcode, encryption keys and all vaults' },
+          { title: 'Disclaimer Notice', subtitle: 'Notice of app usage' },  // TODO
+          { title: 'Hard Reset', subtitle: 'Clear passcode, encryption keys and all vaults' },
           { title: 'Exit', subtitle: 'Close app' },
         ],
         softKeyCenterText: 'select',
@@ -211,11 +214,11 @@
         onEnter: async (evt, scope) => {
           lskMenu.$destroy();
           if (scope.index == 0) {
-            openVaultModal();
-          } else if (scope.index == 4) {
+
+          } else if (scope.index == 3) {
             await WebCryptoVault.dbAppConfig.clear();
             await WebCryptoVault.dbPasswordVault.clear();
-          } else if (scope.index == 5) {
+          } else if (scope.index == 4) {
             window.close();
           }
         },
