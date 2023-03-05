@@ -23,7 +23,7 @@
   $: if (Object.keys(collections).length > 0) {
     const { softwareKey } = getAppProp();
     if (window['_activityRequest_'] != null)
-      softwareKey.setText({ left: '', center: 'SELECT', right: '' });
+      softwareKey.setText({ left: '', center: 'EXPORT', right: '' });
     else
       softwareKey.setText({ left: 'Menu', center: '+', right: 'Options' });
   } else {
