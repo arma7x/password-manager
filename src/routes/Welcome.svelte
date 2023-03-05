@@ -33,6 +33,7 @@
       softwareKey.setText({ left: 'Menu', center: '+', right: '' });
   }
 
+  let exportVaultMenu: OptionMenu;
   let lskMenu: OptionMenu;
   let rskMenu: OptionMenu;
   let dialog: Dialog;
@@ -131,7 +132,20 @@
     navInstance.detachListener();
   });
 
-  async function openVault(data: any) {
+  type openVaultCallback = (any) => void;
+
+  function openVaultUpdateCallback(data: any) {
+    openVaultModal(data);
+  }
+
+  function openVaultExportCallback(data: any) {
+    if (window['_activityRequest_'] != null) {
+      window['_activityRequest_'].postResult(data.data);
+      window['_activityRequest_'].close();
+    }
+  }
+
+  async function openVault(data: any, callback: openVaultCallback) {
     const hashedPasscode = await WebCryptoVault.getPasswordHash()
     if (hashedPasscode == null)
       return;
@@ -150,12 +164,7 @@
               const decrypted = await WebCryptoVault.rsaDecrypt(privateKey, data.encrypted[i]);
               chunks.push(decrypted);
             }
-            openVaultModal({
-              key: data.key,
-              alias: data.alias,
-              name: data.name,
-              data: chunks.join(''),
-            });
+            callback({ key: data.key, alias: data.alias, name: data.name, data: chunks.join('') });
           }
         },
         onError: (err: any) => {
@@ -260,7 +269,7 @@
           rskMenu.$destroy();
           if (scope.index == 0) {
             const key = Object.keys(collections)[navInstance.verticalNavIndex];
-            openVault({key, ...collections[key]})
+            openVault({key, ...collections[key]}, openVaultUpdateCallback);
           } else if (scope.index == 1) {
             console.log(collections[Object.keys(collections)[navInstance.verticalNavIndex]]);
           } else if (scope.index == 2) {
@@ -286,9 +295,46 @@
   function exportVault(data) {
     if (window['_activityRequest_'] == null)
       return;
-    window['_activityRequest_'].postResult(data.name);
-    window['_activityRequest_'].close();
-    // TODO Options Menu Alias, Name and Sensitive Data
+    exportVaultMenu = new OptionMenu({
+      target: document.body,
+      props: {
+        title: 'Select',
+        focusIndex: 0,
+        options: [
+          { title: 'Alias', subtitle: `${data.alias}` },
+          { title: 'Name', subtitle: `${data.name}` },
+          { title: 'Data', subtitle: 'Export sensitive data' },
+        ],
+        softKeyCenterText: 'select',
+        onSoftkeyRight: (evt, scope) => {},
+        onSoftkeyLeft: (evt, scope) => {},
+        onEnter: async (evt, scope) => {
+          exportVaultMenu.$destroy();
+          if (scope.index == 0) {
+            window['_activityRequest_'].postResult(data.alias);
+            window['_activityRequest_'].close();
+          } else if (scope.index == 1) {
+            window['_activityRequest_'].postResult(data.name);
+            window['_activityRequest_'].close();
+          } else if (scope.index == 2) {
+            const key = Object.keys(collections)[navInstance.verticalNavIndex];
+            openVault({key, ...collections[key]}, openVaultExportCallback);
+          }
+        },
+        onBackspace: (evt, scope) => {
+          evt.preventDefault();
+          evt.stopPropagation();
+          exportVaultMenu.$destroy();
+        },
+        onOpened: () => {
+          navInstance.detachListener();
+        },
+        onClosed: (scope) => {
+          navInstance.attachListener();
+          exportVaultMenu = null;
+        }
+      }
+    });
   }
 
   function openVaultModal(update: Object | null) {
