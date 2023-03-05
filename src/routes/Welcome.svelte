@@ -140,6 +140,7 @@
       props: {
         title: 'Change Passcode',
         onSuccess: async (_passcode: string) => {
+          toastMessage('Success');
           changePasscodeModal.$destroy();
           await getCollections();
         },
@@ -271,7 +272,7 @@
           { title: 'Change passcode', subtitle: 'Change app passcode' }, // TODO
           { title: 'FAQ', subtitle: 'Frequently Asked Questions' }, // TODO
           { title: 'Disclaimer Notice', subtitle: 'Notice of app usage' },  // TODO
-          { title: 'Hard Reset', subtitle: 'Clear passcode, encryption keys and all vaults' },
+          // { title: 'Hard Reset', subtitle: 'Clear passcode, encryption keys and all vaults' },
           { title: 'Exit', subtitle: 'Close app' },
         ],
         softKeyCenterText: 'select',
