@@ -14,7 +14,6 @@
   }
 
   onMount(() => {
-    console.log('onMount', 'App');
     document.addEventListener('visibilitychange', (evt) => {
       if (document.visibilityState === 'hidden') {
         window.close();

@@ -66,7 +66,6 @@
   let navInstance = createKaiNavigator(navOptions);
 
   onMount(async () => {
-    console.log('onMount', name);
     navigator.mozSetMessageHandler('activity', (activityRequest) => {
       window['_activityRequest_'] = activityRequest;
       window['_option_'] = window['_activityRequest_'].source;
@@ -129,7 +128,6 @@
   });
 
   onDestroy(() => {
-    console.log('onDestroy', name);
     navInstance.detachListener();
   });
 
@@ -270,6 +268,7 @@
             const key = Object.keys(collections)[navInstance.verticalNavIndex];
             openVault({key, ...collections[key]}, openVaultUpdateCallback);
           } else if (scope.index == 1) {
+            // TODO
             console.log(collections[Object.keys(collections)[navInstance.verticalNavIndex]]);
           } else if (scope.index == 2) {
             removeVault(Object.keys(collections)[navInstance.verticalNavIndex]);
