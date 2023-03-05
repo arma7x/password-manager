@@ -145,7 +145,7 @@
       target: document.body,
       props: {
         title: data.name,
-        data: data.data,
+        data: data.data.length > 15 ? data.data.substring(0, 12) + '...' : data.data,
         onBackspace: (evt) => {
           qrModal.$destroy();
           evt.preventDefault();
