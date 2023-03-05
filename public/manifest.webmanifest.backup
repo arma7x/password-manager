@@ -1,6 +1,6 @@
 {
-  "name": "Password Manager",
-  "description": "A Password Manager for KaiOS",
+  "name": "Password Vault",
+  "description": "A password manager app for KaiOS",
   "start_url": "/index.html",
   "theme": "#ff3e00",
   "theme_color": "#ff3e00",
@@ -43,9 +43,9 @@
     "dependencies": {},
     "locales": {
       "en-US": {
-        "name": "Password Manager",
-        "subtitle": "A Password Manager for KaiOS",
-        "description": "A Password Manager for KaiOS"
+        "name": "Password Vault",
+        "subtitle": "A password manager app for KaiOS",
+        "description": "A password manager app for KaiOS"
       }
     }
   }

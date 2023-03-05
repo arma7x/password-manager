@@ -16,7 +16,7 @@
 
   const navClass = "welcomeNavClass";
 
-  let name: string = 'Password Manager';
+  let name: string = 'Password Vault';
 
   $: if (Object.keys(collections).length > 0) {
     const { softwareKey } = getAppProp();
