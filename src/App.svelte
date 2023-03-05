@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Router, Route, Link } from 'svelte-navigator';
   import { AppBar, SoftwareKey } from './components/index.ts';
-  import { Welcome, Demo, Room } from './routes/index.ts';
+  import { Welcome } from './routes/index.ts';
   import { onMount, onDestroy } from 'svelte';
   import { Localization } from './utils/localization.ts';
 
@@ -32,12 +32,6 @@
     </Route>
     <Route primary={false} path="/" let:location let:navigate>
       <svelte:component this="{Welcome}" {location} {navigate} {getAppProp}/>
-    </Route>
-    <Route primary={false} path="demo" let:location let:navigate>
-      <svelte:component this="{Demo}" {location} {navigate} {getAppProp}/>
-    </Route>
-    <Route primary={false} path="room" let:location let:navigate>
-      <svelte:component this="{Room}" {location} {navigate} {getAppProp}/>
     </Route>
   </main>
   <SoftwareKey bind:this={softwareKey} />
