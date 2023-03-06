@@ -169,7 +169,12 @@
   function openVaultExportCallback(data: RawVault) {
     if (window['_activityRequest_'] != null) {
       window['_activityRequest_'].postResult(data.data);
-      window['_activityRequest_'].close();
+      try {
+        window['_activityRequest_'].close();
+      } catch (err) {}
+      try {
+        window.close();
+      } catch (err) {}
     }
   }
 
