@@ -4,6 +4,7 @@ REV=$(($(date +%s%N)/1000000))
 ZIP_BUILD="build"
 
 rm ./*.zip
+rm ./public/build/*
 yarn build
 rm ./public/build/*.map
 cd ./public && zip -r "./${ZIP_BUILD}_${REV}.zip" * && cp "./${ZIP_BUILD}_${REV}.zip" ../ && rm "./${ZIP_BUILD}_${REV}.zip"
