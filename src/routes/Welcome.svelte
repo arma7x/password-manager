@@ -286,9 +286,9 @@
           if (scope.index == 0) {
             changePasscode();
           } else if (scope.index == 1) {
-            // TODO FAQ
+            // FAQ
           } else if (scope.index == 2) {
-            // TODO Disclaimer Notice
+            openDisclaimerNotice();
           } else if (scope.index == 3) {
             window.close();
           }
@@ -461,6 +461,38 @@
           } catch (err) {}
         },
         onEnter: (evt) => {},
+        onBackspace: (evt) => {
+          evt.preventDefault();
+          evt.stopPropagation();
+          dialog.$destroy();
+        },
+        onOpened: () => {
+          navInstance.detachListener();
+        },
+        onClosed: () => {
+          navInstance.attachListener();
+          dialog = null;
+        }
+      }
+    });
+  }
+
+  async function openDisclaimerNotice() {
+    const license = await (await fetch('/LICENSE.txt')).text();
+    dialog = new Dialog({
+      target: document.body,
+      props: {
+        title: 'Disclaimer Notice',
+        html: true,
+        body: `<p style="white-space: pre-line;">${license}</p>`,
+        softKeyCenterText: 'CLOSE',
+        softKeyLeftText: '',
+        softKeyRightText: '',
+        onSoftkeyLeft: (evt) => {},
+        onSoftkeyRight: (evt) => {},
+        onEnter: (evt) => {
+          dialog.$destroy();
+        },
         onBackspace: (evt) => {
           evt.preventDefault();
           evt.stopPropagation();
