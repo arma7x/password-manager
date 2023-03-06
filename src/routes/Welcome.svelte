@@ -19,17 +19,21 @@
   let name: string = 'Password Vault';
 
   $: if (Object.keys(collections).length > 0) {
-    const { softwareKey } = getAppProp();
-    if (window['_activityRequest_'] != null)
-      softwareKey.setText({ left: '', center: 'EXPORT', right: '' });
-    else
+    const { appBar, softwareKey } = getAppProp();
+    if (window['_activityRequest_'] != null) {
+      appBar.setTitleText("Select a vault");
+      softwareKey.setText({ left: '', center: 'SELECT', right: '' });
+    } else {
       softwareKey.setText({ left: 'Menu', center: '+', right: 'Options' });
+    }
   } else {
-    const { softwareKey } = getAppProp();
-    if (window['_activityRequest_'] != null)
+    const { appBar, softwareKey } = getAppProp();
+    if (window['_activityRequest_'] != null) {
+      appBar.setTitleText("Select a vault");
       softwareKey.setText({ left: '', center: 'EMPTY', right: '' });
-    else
+    } else {
       softwareKey.setText({ left: 'Menu', center: '+', right: '' });
+    }
   }
 
   let passcodeModal: SetupPasscode | RequiredPasscode;
@@ -495,9 +499,15 @@
 </script>
 
 <main id="welcome-screen" data-pad-top="28" data-pad-bottom="30">
-  {#each Object.keys(collections) as key }
-    <ListView className="{navClass}" title="{collections[key].alias}" subtitle="{collections[key].name}" onClick={() => exportVault({key, ...collections[key]})}/>
-  {/each}
+  {#if Object.keys(collections) > 0}
+    {#each Object.keys(collections) as key }
+      <ListView className="{navClass}" title="{collections[key].alias}" subtitle="{collections[key].name}" onClick={() => exportVault({key, ...collections[key]})}/>
+    {/each}
+  {:else}
+    <div class="container">
+      Nothing in vault storage
+    </div>
+  {/if}
 </main>
 
 <style>
@@ -505,5 +515,12 @@
     overflow: scroll;
     overflow-x: hidden;
     width: 100%;
+  }
+  #welcome-screen > .container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>

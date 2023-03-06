@@ -200,7 +200,6 @@
   }
   .kai-dialog > .kai-dialog-content > .kai-dialog-body {
     max-height: calc(100% - 78px);
-    height: 220px;
     overflow: scroll;
     padding: 5px;
     display: flex;
