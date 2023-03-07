@@ -1,4 +1,6 @@
-<b>REMINDER</b>: Do not use <b>Password Vault</b> to autofill any <b>Text Input</b> field/passcode inside <b>Password Vault</b>
+REMINDER:
+- Do not use <b>Password Vault</b> to autofill any <b>Text Input</b> field/passcode inside <b>Password Vault</b>
+- Autofill might not work on certain KaiOS device
 
 How autofill work ?
 - Select or focus on any <b>Text Input</b> field inside any apps then long-press <b>Enter</b> button
