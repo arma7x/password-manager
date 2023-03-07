@@ -145,7 +145,7 @@ export function checkPasscodeRequirement(str, min = 3) {
   if (str.length < min)
     throw(`Minimum length is ${min}`);
   if (/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/.test(str) === false)
-    throw("At least 1 number and 1 uppercase and 1 lowercase");
+    throw("Must contain at least 1 numeric character, 1 uppercase and 1 lowercase");
   return str
 }
 
