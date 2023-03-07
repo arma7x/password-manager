@@ -1,5 +1,7 @@
+<b>REMINDER</b>: Do not use <b>Password Vault</b> to autofill any <b>Text Input</b> field/passcode inside <b>Password Vault</b>
+
 How autofill work ?
-- Select or focus on any <b>Text Input</b> field then long-press <b>Enter</b> button
+- Select or focus on any <b>Text Input</b> field inside any apps then long-press <b>Enter</b> button
 
 Why <b>Password Vault</b> keep asking me to re-enter the <b>Passcode</b> ?
 - <b>Password Vault</b> does not keep the <b>Passcode</b> in memory during runtime, so it required the user to re-enter the <b>Passcode</b> for each decryption operation
