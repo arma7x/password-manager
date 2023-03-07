@@ -1,6 +1,6 @@
 {
   "name": "Password Vault",
-  "description": "A password manager app for KaiOS",
+  "description": "A password manager app for KaiOS. This app also support autofill text input field inside any apps",
   "start_url": "/index.html",
   "theme": "#ff3e00",
   "theme_color": "#ff3e00",
@@ -44,8 +44,8 @@
     "locales": {
       "en-US": {
         "name": "Password Vault",
-        "subtitle": "A password manager app for KaiOS",
-        "description": "A password manager app for KaiOS"
+        "subtitle": "A password manager app for KaiOS. This app also support autofill text input field inside any apps",
+        "description": "A password manager app for KaiOS. This app also support autofill text input field inside any apps"
       }
     }
   }
