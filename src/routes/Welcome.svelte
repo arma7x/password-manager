@@ -291,9 +291,9 @@
           if (scope.index == 0) {
             changePasscode();
           } else if (scope.index == 1) {
-            // FAQ
+            openLocalText('FAQ', '/FAQ.txt');
           } else if (scope.index == 2) {
-            openDisclaimerNotice();
+            openLocalText('Disclaimer Notice', '/LICENSE.txt');
           } else if (scope.index == 3) {
             window.close();
           }
@@ -482,14 +482,14 @@
     });
   }
 
-  async function openDisclaimerNotice() {
-    const license = await (await fetch('/LICENSE.txt')).text();
+  async function openLocalText(title, path) {
+    const license = await (await fetch(path)).text();
     dialog = new Dialog({
       target: document.body,
       props: {
-        title: 'Disclaimer Notice',
+        title: title,
         html: true,
-        body: `<p style="white-space: pre-line;">${license}</p>`,
+        body: `<p style="margin-top:0px;white-space: pre-line;">${license}</p>`,
         softKeyCenterText: 'CLOSE',
         softKeyLeftText: '',
         softKeyRightText: '',

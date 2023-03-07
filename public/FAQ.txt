@@ -1,0 +1,17 @@
+How autofill work ?
+- Select or focus on any <b>Text Input</b> field then long-press <b>Enter</b> button
+
+Why <b>Password Vault</b> keep asking me to re-enter the <b>Passcode</b> ?
+- <b>Password Vault</b> does not keep the <b>Passcode</b> in memory during runtime, so it required the user to re-enter the <b>Passcode</b> for each decryption operation
+
+<b>Passcode</b> requirement:
+- Exact length is 10 characters
+- Must contain at least 1 numeric, 1 uppercase and 1 lowercase
+
+How <b>Password Vault</b> encrypt sensitive data ?
+1. <b>Password Vault</b> use <b>RSA-OAEP</b> algorithm to encrypt and decrypt sensitive data. <b>RSA-OAEP</b> algorithm required a <b>private key</b>(only for decryption) and a <b>public key</b>(only for encryption). Both keys were generated during setup process and saved locally
+2. To secured the <b>RSA-OAEP's private key</b>(saved locally), <b>Password Vault</b> use <b>AES-GCM</b> algorithm to encrypt and decrypt the <b>private key</b>. This algorithm required user to enter the <b>Passcode</b> during encryption and decryption process
+3. <b>Passcode</b> are the most critical data. <b>Password Vault</b> does not store it in plain text but hashes the <b>Passcode</b> using the <b>Bcrypt</b> algorithm before storing the hashed output locally. To verify the <b>Passcode</b>, this hashing algorithm will compare the <b>Passcode</b> with the hashed output(stored locally) before proceed to decryption process
+
+FOSS:
+- https://github.com/arma7x/password-manager
