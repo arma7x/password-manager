@@ -13,10 +13,17 @@
     return {appBar, softwareKey, localization};
   }
 
+  let lastIdle: number = 0;
+
   onMount(() => {
     document.addEventListener('visibilitychange', (evt) => {
       if (document.visibilityState === 'hidden') {
-        window.close();
+        lastIdle = new Date().getTime();
+      } else {
+        if (lastIdle !== 0 && (new Date().getTime() - lastIdle > 30000))
+          window.close();
+        else
+          lastIdle = 0;
       }
     });
     getKaiAd({

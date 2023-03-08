@@ -65,9 +65,7 @@
         }
       }
     },
-    backspaceListener: function(evt) {
-      window.close();
-    }
+    backspaceListener: function(evt) {}
   };
 
   let navInstance = createKaiNavigator(navOptions);

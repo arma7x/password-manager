@@ -2,6 +2,7 @@ REMINDER:
 - Do not use <b>Password Vault</b> to autofill any <b>Text Input</b> field/passcode inside <b>Password Vault</b>
 - Autofill might not work on certain KaiOS version
 - If your device is stolen, please change your associated password immediately. The estimated time it takes for a hacker to brute force your passcode is around 3 weeks
+- <b>Password Vault</b> implement auto-kill switch if device stay in idle mode for more than 30 seconds
 
 How autofill work ?
 - Select or focus on any <b>Text Input</b> field inside any apps then long-press <b>Enter</b> button
