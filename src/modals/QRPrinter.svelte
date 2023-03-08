@@ -4,7 +4,7 @@
 
   import { onMount, onDestroy } from 'svelte';
   import { createKaiNavigator } from '../utils/navigation.ts';
-  import { SoftwareKey } from '../components/index.ts';
+  import { SoftwareKey, LoadingBar } from '../components/index.ts';
 
   export let title: string = 'QR Code';
   export let data: string = '';
@@ -14,6 +14,7 @@
 
   let softwareKey: SoftwareKey;
   let qrcode: QRCode;
+  let loadingBar: LoadingBar;
 
   let navOptions = {
     softkeyRightListener: function(evt) {
@@ -42,16 +43,22 @@
       }
     });
     onOpened();
-    const container = document.getElementById('qr-container');
-    container.textContent = '';
-    qrcode = new QRCode(container, {
-      text: data,
-      width: 200,
-      height: 200,
-      colorDark : "#000000",
-      colorLight : "#ffffff",
-      correctLevel : QRCode.CorrectLevel.H
-    });
+    showLoadingBar();
+    try {
+      const container = document.getElementById('qr-container');
+      container.textContent = '';
+      qrcode = new QRCode(container, {
+        text: data,
+        width: 200,
+        height: 200,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      });
+      hideLoadingBar();
+    } catch (err) {
+      hideLoadingBar();
+    }
   })
 
   onDestroy(() => {
@@ -59,6 +66,28 @@
     softwareKey.$destroy();
     onClosed();
   })
+
+  function showLoadingBar() {
+    loadingBar = new LoadingBar({
+      target: document.body,
+      props: {
+        onOpened: () => {
+          navInstance.detachListener();
+        },
+        onClosed: () => {
+          navInstance.attachListener();
+          loadingBar = null;
+        }
+      }
+    });
+  }
+
+  function hideLoadingBar() {
+    if (loadingBar != null) {
+      loadingBar.$destroy();
+      loadingBar = null;
+    }
+  }
 
 </script>
 

@@ -2,7 +2,7 @@
 
   import { onMount, onDestroy } from 'svelte';
   import { createKaiNavigator } from '../utils/navigation.ts';
-  import { SoftwareKey } from '../components/index.ts';
+  import { SoftwareKey, LoadingBar } from '../components/index.ts';
   import Passcode from './Passcode.svelte';
   import { checkPasscodeRequirement, comparePassword } from '../utils/WebCryptoVault.ts';
 
@@ -18,6 +18,7 @@
   let passcode: string = '';
 
   let softwareKey: SoftwareKey;
+  let loadingBar: LoadingBar;
 
   let navOptions = {
     verticalNavClass: 'navClassModal',
@@ -34,13 +35,16 @@
         onSuccess(null);
     },
     enterListener: function(evt) {
+      showLoadingBar();
       try {
         checkPasscodeRequirement(passcode, 10);
         if (comparePassword(passcode, hashedPasscode) == false) {
           throw("Invalid passcode");
         }
+        hideLoadingBar();
         onSuccess(passcode);
       } catch (err) {
+        hideLoadingBar();
         onError(err);
       }
     },
@@ -71,6 +75,28 @@
     softwareKey.$destroy();
     onClosed();
   })
+
+  function showLoadingBar() {
+    loadingBar = new LoadingBar({
+      target: document.body,
+      props: {
+        onOpened: () => {
+          navInstance.detachListener();
+        },
+        onClosed: () => {
+          navInstance.attachListener();
+          loadingBar = null;
+        }
+      }
+    });
+  }
+
+  function hideLoadingBar() {
+    if (loadingBar != null) {
+      loadingBar.$destroy();
+      loadingBar = null;
+    }
+  }
 
 </script>
 

@@ -279,8 +279,8 @@
         focusIndex: 0,
         options: [
           { title: 'Change passcode', subtitle: 'Change app passcode' },
-          { title: 'FAQ', subtitle: 'Frequently Asked Questions' }, // TODO
-          { title: 'Disclaimer Notice', subtitle: 'Notice of app usage' },  // TODO
+          { title: 'FAQ', subtitle: 'Frequently Asked Questions' },
+          { title: 'Disclaimer Notice', subtitle: 'Notice of app usage' },
           { title: 'Exit', subtitle: 'Close app' },
         ],
         softKeyCenterText: 'select',
@@ -326,6 +326,7 @@
         focusIndex: 0,
         options: [
           { title: 'Update', subtitle: 'Update data inside vault storage' },
+          // { title: 'View', subtitle: 'Show all information' },
           { title: 'Generate QR-Code', subtitle: 'Convert sensitive data into qr-code' },
           { title: 'Remove', subtitle: 'Remove from vault storage' },
         ],
