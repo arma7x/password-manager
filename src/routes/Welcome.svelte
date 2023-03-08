@@ -537,7 +537,7 @@
 </script>
 
 <main id="welcome-screen" data-pad-top="28" data-pad-bottom="30">
-  {#if Object.keys(collections) > 0}
+  {#if Object.keys(collections).length > 0}
     {#each Object.keys(collections) as key }
       <ListView className="{navClass}" title="{collections[key].alias}" subtitle="{collections[key].name}" onClick={() => exportVault({key, ...collections[key]})}/>
     {/each}

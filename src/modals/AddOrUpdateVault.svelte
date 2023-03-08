@@ -66,7 +66,7 @@
       target: document.body,
       props: {
         isInvert: true,
-        leftText: 'QR-Code', // TODO
+        leftText: 'QR-Code',
         centerText: 'SAVE',
         rightText: 'Cancel'
       }
