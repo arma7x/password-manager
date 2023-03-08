@@ -488,7 +488,7 @@
       props: {
         title: title,
         html: true,
-        body: `<p style="margin-top:0px;white-space: pre-line;">${license}</p>`,
+        body: `<p style="margin-top:0px;white-space:pre-line;font-size:12px;">${license}</p>`,
         softKeyCenterText: 'CLOSE',
         softKeyLeftText: '',
         softKeyRightText: '',
