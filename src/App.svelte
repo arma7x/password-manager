@@ -26,22 +26,6 @@
           lastIdle = 0;
       }
     });
-    getKaiAd({
-      publisher: 'ac3140f7-08d6-46d9-aa6f-d861720fba66',
-      app: 'password-manager',
-      slot: 'kaios',
-      onerror: err => console.error(err),
-      onready: ad => {
-        if (window['_activityRequest_'] == null) {
-          const ae = document.activeElement;
-          ad.call('display')
-          ad.on('close', () => {
-            ae.focus();
-          });
-          ad.on('display', () => {});
-        }
-      }
-    });
   });
 
 </script>
